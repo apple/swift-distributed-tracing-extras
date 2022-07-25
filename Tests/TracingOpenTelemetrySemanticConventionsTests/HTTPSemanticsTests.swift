@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-@testable import OpenTelemetrySemanticConventions
+@testable import TracingOpenTelemetrySemanticConventions
 import Tracing
 import XCTest
 
