@@ -12,8 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-@testable import OpenTelemetrySemanticConventions
 import Tracing
+import TracingOpenTelemetrySemanticConventions
 import XCTest
 
 final class DatabaseSemanticsTests: XCTestCase {
@@ -35,7 +35,7 @@ final class DatabaseSemanticsTests: XCTestCase {
         attributes.db.statement = "SELECT version();"
         XCTAssertEqual(attributes["db.statement"]?.toSpanAttribute(), "SELECT version();")
 
-        attributes.db.operation = "findAndModify";
+        attributes.db.operation = "findAndModify"
         XCTAssertEqual(attributes["db.operation"]?.toSpanAttribute(), "findAndModify")
     }
 

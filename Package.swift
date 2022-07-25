@@ -5,25 +5,32 @@ let package = Package(
     name: "swift-distributed-tracing-extras",
     platforms: [
         .macOS(.v10_13),
-        .iOS(.v11),
+        .iOS(.v14),
+        .tvOS(.v14),
+        .watchOS(.v7),
     ],
     products: [
-        .library(name: "OpenTelemetrySemanticConventions", targets: ["OpenTelemetrySemanticConventions"]),
+        .library(
+            name: "TracingOpenTelemetrySemanticConventions",
+            targets: [
+                "TracingOpenTelemetrySemanticConventions",
+            ]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-distributed-tracing.git", from: "0.3.0"),
     ],
     targets: [
         .target(
-            name: "OpenTelemetrySemanticConventions",
+            name: "TracingOpenTelemetrySemanticConventions",
             dependencies: [
                 .product(name: "Tracing", package: "swift-distributed-tracing"),
             ]
         ),
         .testTarget(
-            name: "OpenTelemetrySemanticConventionsTests",
+            name: "TracingOpenTelemetrySemanticConventionsTests",
             dependencies: [
-                .target(name: "OpenTelemetrySemanticConventions"),
+                .target(name: "TracingOpenTelemetrySemanticConventions"),
                 .product(name: "Tracing", package: "swift-distributed-tracing"),
             ]
         ),

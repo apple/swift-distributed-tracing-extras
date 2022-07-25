@@ -123,7 +123,6 @@ public struct HTTPAttributes: SpanAttributeNamespace {
             ///
             /// Not set if transport encoding is not used.
             public var uncompressedContentLength: Key<Int> { "http.request_content_length_uncompressed" }
-
         }
     }
 
