@@ -3,6 +3,10 @@ import PackageDescription
 
 let package = Package(
     name: "swift-distributed-tracing-extras",
+    platforms: [
+        .macOS(.v10_13),
+        .iOS(.v11),
+    ],
     products: [
         .library(name: "OpenTelemetrySemanticConventions", targets: ["OpenTelemetrySemanticConventions"]),
     ],
