@@ -81,7 +81,7 @@ public struct NetworkAttributes: SpanAttributeNamespace {
         public static let other = Transport(rawValue: "other")
 
         public func toSpanAttribute() -> SpanAttribute {
-            .string(rawValue)
+            .string(self.rawValue)
         }
     }
 

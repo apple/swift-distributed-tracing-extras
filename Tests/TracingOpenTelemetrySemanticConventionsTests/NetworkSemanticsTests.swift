@@ -12,8 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import TracingOpenTelemetrySemanticConventions
 import Tracing
+import TracingOpenTelemetrySemanticConventions
 import XCTest
 
 final class NetworkSemanticsTests: XCTestCase {

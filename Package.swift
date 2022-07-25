@@ -13,7 +13,7 @@ let package = Package(
         .library(
             name: "TracingOpenTelemetrySemanticConventions",
             targets: [
-                "TracingOpenTelemetrySemanticConventions"
+                "TracingOpenTelemetrySemanticConventions",
             ]
         ),
     ],
