@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.3
 import PackageDescription
 
 let package = Package(
@@ -19,7 +19,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-distributed-tracing.git", from: "0.3.0"),
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
         .target(
