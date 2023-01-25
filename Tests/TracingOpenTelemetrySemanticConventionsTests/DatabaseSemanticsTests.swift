@@ -17,78 +17,67 @@ import TracingOpenTelemetrySemanticConventions
 import XCTest
 
 final class DatabaseSemanticsTests: XCTestCase {
-    func test_databaseNamespace() {
-        var attributes = SpanAttributes()
+    private var attributes = SpanAttributes()
 
+    override func setUp() {
+        attributes = [:]
+    }
+
+    func test_database() {
         attributes.db.system = "postgresql"
-        XCTAssertEqual(attributes["db.system"]?.toSpanAttribute(), "postgresql")
-
         attributes.db.connectionString = "test"
-        XCTAssertEqual(attributes["db.connection_string"]?.toSpanAttribute(), "test")
-
         attributes.db.user = "swift"
-        XCTAssertEqual(attributes["db.user"]?.toSpanAttribute(), "swift")
-
         attributes.db.name = "languages"
-        XCTAssertEqual(attributes["db.name"]?.toSpanAttribute(), "languages")
-
         attributes.db.statement = "SELECT version();"
-        XCTAssertEqual(attributes["db.statement"]?.toSpanAttribute(), "SELECT version();")
-
         attributes.db.operation = "findAndModify"
-        XCTAssertEqual(attributes["db.operation"]?.toSpanAttribute(), "findAndModify")
+
+        XCTAssertSpanAttributesEqual(attributes, [
+            "db.system": "postgresql",
+            "db.connection_string": "test",
+            "db.user": "swift",
+            "db.name": "languages",
+            "db.statement": "SELECT version();",
+            "db.operation": "findAndModify",
+        ])
     }
 
-    func test_MSSQLNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_MSSQL() {
         attributes.db.mssql.instanceName = "test"
-        XCTAssertEqual(attributes["db.mssql.instance_name"]?.toSpanAttribute(), "test")
+        XCTAssertSpanAttributesEqual(attributes, ["db.mssql.instance_name": "test"])
     }
 
-    func test_redisNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_redis() {
         attributes.db.redis.databaseIndex = 42
-        XCTAssertEqual(attributes["db.redis.database_index"]?.toSpanAttribute(), 42)
+        XCTAssertSpanAttributesEqual(attributes, ["db.redis.database_index": 42])
     }
 
-    func test_mongoDBNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_mongoDB() {
         attributes.db.mongoDB.collection = "languages"
-        XCTAssertEqual(attributes["db.mongodb.collection"]?.toSpanAttribute(), "languages")
+        XCTAssertSpanAttributesEqual(attributes, ["db.mongodb.collection": "languages"])
     }
 
-    func test_sqlNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_SQL() {
         attributes.db.sql.table = "languages"
-        XCTAssertEqual(attributes["db.sql.table"]?.toSpanAttribute(), "languages")
+        XCTAssertSpanAttributesEqual(attributes, ["db.sql.table": "languages"])
     }
 
-    func test_cassandraNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_cassandra() {
         attributes.db.cassandra.pageSize = 42
-        XCTAssertEqual(attributes["db.cassandra.page_size"]?.toSpanAttribute(), 42)
-
         attributes.db.cassandra.consistencyLevel = "all"
-        XCTAssertEqual(attributes["db.cassandra.consistency_level"]?.toSpanAttribute(), "all")
-
         attributes.db.cassandra.table = "languages"
-        XCTAssertEqual(attributes["db.cassandra.table"]?.toSpanAttribute(), "languages")
-
         attributes.db.cassandra.idempotence = true
-        XCTAssertEqual(attributes["db.cassandra.idempotence"]?.toSpanAttribute(), true)
-
         attributes.db.cassandra.speculativeExecutionCount = 42
-        XCTAssertEqual(attributes["db.cassandra.speculative_execution_count"]?.toSpanAttribute(), 42)
-
         attributes.db.cassandra.coordinatorID = "test"
-        XCTAssertEqual(attributes["db.cassandra.coordinator.id"]?.toSpanAttribute(), "test")
-
         attributes.db.cassandra.coordinatorDataCenter = "test"
-        XCTAssertEqual(attributes["db.cassandra.coordinator.dc"]?.toSpanAttribute(), "test")
+
+        XCTAssertSpanAttributesEqual(attributes, [
+            "db.cassandra.page_size": 42,
+            "db.cassandra.consistency_level": "all",
+            "db.cassandra.table": "languages",
+            "db.cassandra.idempotence": true,
+            "db.cassandra.speculative_execution_count": 42,
+            "db.cassandra.coordinator.id": "test",
+            "db.cassandra.coordinator.dc": "test",
+        ])
     }
 }

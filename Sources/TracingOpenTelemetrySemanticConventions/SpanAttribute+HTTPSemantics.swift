@@ -151,7 +151,7 @@ public struct HTTPAttributes: SpanAttributeNamespace {
         /// OpenTelemetry Spec: [HTTP request and response headers](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.11.0/specification/trace/semantic_conventions/http.md#http-request-and-response-headers)
         public var headers: HeaderAttributes {
             get {
-                .init(attributes: self.attributes, group: "request")
+                .init(attributes: self.attributes, group: "response")
             }
             set {
                 self.attributes = newValue.attributes
@@ -219,7 +219,6 @@ extension HTTPAttributes {
     /// Semantic conventions for HTTP headers.
     ///
     /// OpenTelemetry Spec: [HTTP request and response headers](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.11.0/specification/trace/semantic_conventions/http.md#http-request-and-response-headers)
-    @dynamicMemberLookup
     public struct HeaderAttributes {
         var attributes: SpanAttributes
         private let group: String
@@ -227,18 +226,6 @@ extension HTTPAttributes {
         init(attributes: SpanAttributes, group: String) {
             self.attributes = attributes
             self.group = group
-        }
-
-        public subscript(dynamicMember header: String) -> [String]? {
-            get {
-                let key = self.attributeKey(forHeader: header)
-                guard case .stringArray(let values) = self.attributes[key]?.toSpanAttribute() else { return nil }
-                return values
-            }
-            set {
-                let key = self.attributeKey(forHeader: header)
-                self.attributes[key] = newValue
-            }
         }
 
         /// Set the given values for the given HTTP header.
@@ -249,7 +236,11 @@ extension HTTPAttributes {
         ///   - header: The name of the HTTP header.
         public mutating func setValues(_ values: [String], forHeader header: String) {
             let key = self.attributeKey(forHeader: header)
-            self.attributes[key] = values
+            if values.count == 1 {
+                self.attributes[key] = values[0]
+            } else {
+                self.attributes[key] = values
+            }
         }
 
         private func attributeKey(forHeader header: String) -> String {
@@ -258,21 +249,10 @@ extension HTTPAttributes {
             for index in header.indices {
                 let character = header[index]
 
-                if character.isUppercase {
-                    if index > header.startIndex {
-                        let previousCharacter = header[header.index(before: index)]
-                        if previousCharacter.isUppercase || previousCharacter == "-" {
-                            key.append(character.lowercased())
-                        } else {
-                            key.append("_\(character.lowercased())")
-                        }
-                    } else {
-                        key.append(character.lowercased())
-                    }
-                } else if character == "-" {
+                if character == "-" {
                     key.append("_")
                 } else {
-                    key.append(character)
+                    key.append(character.lowercased())
                 }
             }
 

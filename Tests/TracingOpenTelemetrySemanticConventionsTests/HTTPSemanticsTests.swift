@@ -17,126 +17,76 @@ import Tracing
 import XCTest
 
 final class HTTPSemanticsTests: XCTestCase {
-    func test_httpNamespace() {
-        var attributes = SpanAttributes()
+    private var attributes = SpanAttributes()
 
+    override func setUp() {
+        attributes = [:]
+    }
+
+    func test_HTTP() {
         attributes.http.method = "GET"
-        XCTAssertEqual(attributes["http.method"]?.toSpanAttribute(), "GET")
-
         attributes.http.url = "https://www.swift.org/download"
-        XCTAssertEqual(attributes["http.url"]?.toSpanAttribute(), "https://www.swift.org/download")
-
         attributes.http.target = "/download"
-        XCTAssertEqual(attributes["http.target"]?.toSpanAttribute(), "/download")
-
         attributes.http.host = "www.swift.org"
-        XCTAssertEqual(attributes["http.host"]?.toSpanAttribute(), "www.swift.org")
-
         attributes.http.scheme = "https"
-        XCTAssertEqual(attributes["http.scheme"]?.toSpanAttribute(), "https")
-
         attributes.http.statusCode = 418
-        XCTAssertEqual(attributes["http.status_code"]?.toSpanAttribute(), 418)
-
         attributes.http.flavor = "1.1"
-        XCTAssertEqual(attributes["http.flavor"]?.toSpanAttribute(), "1.1")
-
         attributes.http.userAgent = "test"
-        XCTAssertEqual(attributes["http.user_agent"]?.toSpanAttribute(), "test")
-
         attributes.http.retryCount = 42
-        XCTAssertEqual(attributes.http.retryCount?.toSpanAttribute(), 42)
+
+        XCTAssertSpanAttributesEqual(attributes, [
+            "http.method": "GET",
+            "http.url": "https://www.swift.org/download",
+            "http.target": "/download",
+            "http.host": "www.swift.org",
+            "http.scheme": "https",
+            "http.status_code": 418,
+            "http.flavor": "1.1",
+            "http.user_agent": "test",
+            "http.retry_count": 42,
+        ])
     }
 
-    func test_httpRequestNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_HTTPRequest() {
         attributes.http.request.contentLength = 42
-        XCTAssertEqual(attributes["http.request_content_length"]?.toSpanAttribute(), 42)
-
         attributes.http.request.uncompressedContentLength = 84
-        XCTAssertEqual(attributes["http.request_content_length_uncompressed"]?.toSpanAttribute(), 84)
+        attributes.http.request.headers.setValues(["application/json"], forHeader: "Content-Type")
+        attributes.http.request.headers.setValues(["text/plain", "application/json"], forHeader: "accept")
 
-        attributes.http.request.headers.contentType = ["application/json"]
-        XCTAssertEqual(attributes.http.request.headers.contentType, ["application/json"])
-        XCTAssertEqual(
-            attributes["http.request.header.content_type"]?.toSpanAttribute(),
-            .stringArray(["application/json"])
-        )
+        XCTAssertSpanAttributesEqual(attributes, [
+            "http.request_content_length": 42,
+            "http.request_content_length_uncompressed": 84,
+            "http.request.header.content_type": "application/json",
+            "http.request.header.accept": .stringArray(["text/plain", "application/json"]),
+        ])
     }
 
-    func test_httpResponseNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_HTTPResponse() {
         attributes.http.response.contentLength = 42
-        XCTAssertEqual(attributes["http.response_content_length"]?.toSpanAttribute(), 42)
-
         attributes.http.response.uncompressedContentLength = 84
-        XCTAssertEqual(attributes["http.response_content_length_uncompressed"]?.toSpanAttribute(), 84)
-
-        attributes.http.response.headers.connection = ["keep-alive"]
-        XCTAssertEqual(attributes.http.request.headers.connection, ["keep-alive"])
-        XCTAssertEqual(
-            attributes["http.request.header.connection"]?.toSpanAttribute(),
-            .stringArray(["keep-alive"])
+        attributes.http.response.headers.setValues(["keep-alive"], forHeader: "connection")
+        attributes.http.response.headers.setValues(
+            ["max-age=0", "private", "must-revalidate"],
+            forHeader: "cache-control"
         )
+
+        XCTAssertSpanAttributesEqual(attributes, [
+            "http.response_content_length": 42,
+            "http.response_content_length_uncompressed": 84,
+            "http.response.header.connection": "keep-alive",
+            "http.response.header.cache_control": .stringArray(["max-age=0", "private", "must-revalidate"]),
+        ])
     }
 
-    func test_httpServerNamespace() {
-        var attributes = SpanAttributes()
-
+    func test_server() {
         attributes.http.server.name = "Swift"
-        XCTAssertEqual(attributes["http.server_name"]?.toSpanAttribute(), "Swift")
-
         attributes.http.server.route = "/blog/:slug"
-        XCTAssertEqual(attributes["http.route"]?.toSpanAttribute(), "/blog/:slug")
-
         attributes.http.server.clientIP = "127.0.0.1"
-        XCTAssertEqual(attributes["http.client_ip"]?.toSpanAttribute(), "127.0.0.1")
-    }
 
-    func test_httpHeaderAttributes_returnsNilIfHeaderNotFound() {
-        let headers = HTTPAttributes.HeaderAttributes(attributes: [:], group: "test")
-
-        XCTAssertNil(headers.test)
-    }
-
-    func test_httpHeaderAttributes_canStoreMultipleValuesPerHeader() {
-        let headers = HTTPAttributes.HeaderAttributes(
-            attributes: ["http.test.header.test": .stringArray(["a", "b", "c"])],
-            group: "test"
-        )
-
-        XCTAssertEqual(headers.test, ["a", "b", "c"])
-    }
-
-    func test_httpHeaderAttributes_transformsCamelCaseIntoSnakeCase() {
-        var headers = HTTPAttributes.HeaderAttributes(attributes: [:], group: "test")
-
-        headers.testHeader = ["test"]
-        XCTAssertEqual(
-            headers.attributes["http.test.header.test_header"]?.toSpanAttribute(),
-            .stringArray(["test"])
-        )
-    }
-
-    func test_httpHeaderAttributes_normalizedKeyRespectsAllCapsWords() {
-        var header = HTTPAttributes.HeaderAttributes(attributes: [:], group: "test")
-
-        header.xTraceID = ["42"]
-        XCTAssertEqual(
-            header.attributes["http.test.header.x_trace_id"]?.toSpanAttribute(),
-            .stringArray(["42"])
-        )
-    }
-
-    func test_httpHeaderAttributes_normalizedKeyReplacesHyphonsWithUnderscores() {
-        var headers = HTTPAttributes.HeaderAttributes(attributes: [:], group: "test")
-
-        headers.setValues(["test"], forHeader: "X-Trace-Id")
-        XCTAssertEqual(
-            headers.attributes["http.test.header.x_trace_id"]?.toSpanAttribute(),
-            .stringArray(["test"])
-        )
+        XCTAssertSpanAttributesEqual(attributes, [
+            "http.server_name": "Swift",
+            "http.route": "/blog/:slug",
+            "http.client_ip": "127.0.0.1",
+        ])
     }
 }
