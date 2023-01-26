@@ -20,41 +20,41 @@ final class NetworkSemanticsTests: XCTestCase {
     private var attributes = SpanAttributes()
 
     override func setUp() {
-        attributes = [:]
+        self.attributes = [:]
     }
 
     func test_networkTransport() {
-        attributes.network.transport = .ipTCP
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "ip_tcp"])
+        self.attributes.network.transport = .ipTCP
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "ip_tcp"])
 
-        attributes.network.transport = .ipUDP
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "ip_udp"])
+        self.attributes.network.transport = .ipUDP
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "ip_udp"])
 
-        attributes.network.transport = .ip
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "ip"])
+        self.attributes.network.transport = .ip
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "ip"])
 
-        attributes.network.transport = .unix
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "unix"])
+        self.attributes.network.transport = .unix
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "unix"])
 
-        attributes.network.transport = .pipe
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "pipe"])
+        self.attributes.network.transport = .pipe
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "pipe"])
 
-        attributes.network.transport = .inProcess
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "inproc"])
+        self.attributes.network.transport = .inProcess
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "inproc"])
 
-        attributes.network.transport = .other
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "other"])
+        self.attributes.network.transport = .other
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "other"])
 
-        attributes.network.transport = .init(rawValue: "custom")
-        XCTAssertSpanAttributesEqual(attributes, ["net.transport": "custom"])
+        self.attributes.network.transport = .init(rawValue: "custom")
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "custom"])
     }
 
     func test_networkPeer() {
-        attributes.network.peer.ip = "127.0.0.1"
-        attributes.network.peer.port = 35555
-        attributes.network.peer.name = "swift.org"
+        self.attributes.network.peer.ip = "127.0.0.1"
+        self.attributes.network.peer.port = 35555
+        self.attributes.network.peer.name = "swift.org"
 
-        XCTAssertSpanAttributesEqual(attributes, [
+        XCTAssertSpanAttributesEqual(self.attributes, [
             "net.peer.ip": "127.0.0.1",
             "net.peer.port": 35555,
             "net.peer.name": "swift.org",
@@ -62,17 +62,17 @@ final class NetworkSemanticsTests: XCTestCase {
     }
 
     func test_networkHost() {
-        attributes.network.host.ip = "127.0.0.1"
-        attributes.network.host.port = 80
-        attributes.network.host.name = "localhost"
-        attributes.network.host.connection.type = "wifi"
-        attributes.network.host.connection.subtype = "LTE"
-        attributes.network.host.carrier.name = "42"
-        attributes.network.host.carrier.mcc = "42"
-        attributes.network.host.carrier.mnc = "42"
-        attributes.network.host.carrier.icc = "DE"
+        self.attributes.network.host.ip = "127.0.0.1"
+        self.attributes.network.host.port = 80
+        self.attributes.network.host.name = "localhost"
+        self.attributes.network.host.connection.type = "wifi"
+        self.attributes.network.host.connection.subtype = "LTE"
+        self.attributes.network.host.carrier.name = "42"
+        self.attributes.network.host.carrier.mcc = "42"
+        self.attributes.network.host.carrier.mnc = "42"
+        self.attributes.network.host.carrier.icc = "DE"
 
-        XCTAssertSpanAttributesEqual(attributes, [
+        XCTAssertSpanAttributesEqual(self.attributes, [
             "net.host.ip": "127.0.0.1",
             "net.host.port": 80,
             "net.host.name": "localhost",

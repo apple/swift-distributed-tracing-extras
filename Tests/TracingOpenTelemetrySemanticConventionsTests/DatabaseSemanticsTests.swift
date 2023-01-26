@@ -20,18 +20,18 @@ final class DatabaseSemanticsTests: XCTestCase {
     private var attributes = SpanAttributes()
 
     override func setUp() {
-        attributes = [:]
+        self.attributes = [:]
     }
 
     func test_database() {
-        attributes.db.system = "postgresql"
-        attributes.db.connectionString = "test"
-        attributes.db.user = "swift"
-        attributes.db.name = "languages"
-        attributes.db.statement = "SELECT version();"
-        attributes.db.operation = "findAndModify"
+        self.attributes.db.system = "postgresql"
+        self.attributes.db.connectionString = "test"
+        self.attributes.db.user = "swift"
+        self.attributes.db.name = "languages"
+        self.attributes.db.statement = "SELECT version();"
+        self.attributes.db.operation = "findAndModify"
 
-        XCTAssertSpanAttributesEqual(attributes, [
+        XCTAssertSpanAttributesEqual(self.attributes, [
             "db.system": "postgresql",
             "db.connection_string": "test",
             "db.user": "swift",
@@ -42,35 +42,35 @@ final class DatabaseSemanticsTests: XCTestCase {
     }
 
     func test_MSSQL() {
-        attributes.db.mssql.instanceName = "test"
-        XCTAssertSpanAttributesEqual(attributes, ["db.mssql.instance_name": "test"])
+        self.attributes.db.mssql.instanceName = "test"
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.mssql.instance_name": "test"])
     }
 
     func test_redis() {
-        attributes.db.redis.databaseIndex = 42
-        XCTAssertSpanAttributesEqual(attributes, ["db.redis.database_index": 42])
+        self.attributes.db.redis.databaseIndex = 42
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.redis.database_index": 42])
     }
 
     func test_mongoDB() {
-        attributes.db.mongoDB.collection = "languages"
-        XCTAssertSpanAttributesEqual(attributes, ["db.mongodb.collection": "languages"])
+        self.attributes.db.mongoDB.collection = "languages"
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.mongodb.collection": "languages"])
     }
 
     func test_SQL() {
-        attributes.db.sql.table = "languages"
-        XCTAssertSpanAttributesEqual(attributes, ["db.sql.table": "languages"])
+        self.attributes.db.sql.table = "languages"
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.sql.table": "languages"])
     }
 
     func test_cassandra() {
-        attributes.db.cassandra.pageSize = 42
-        attributes.db.cassandra.consistencyLevel = "all"
-        attributes.db.cassandra.table = "languages"
-        attributes.db.cassandra.idempotence = true
-        attributes.db.cassandra.speculativeExecutionCount = 42
-        attributes.db.cassandra.coordinatorID = "test"
-        attributes.db.cassandra.coordinatorDataCenter = "test"
+        self.attributes.db.cassandra.pageSize = 42
+        self.attributes.db.cassandra.consistencyLevel = "all"
+        self.attributes.db.cassandra.table = "languages"
+        self.attributes.db.cassandra.idempotence = true
+        self.attributes.db.cassandra.speculativeExecutionCount = 42
+        self.attributes.db.cassandra.coordinatorID = "test"
+        self.attributes.db.cassandra.coordinatorDataCenter = "test"
 
-        XCTAssertSpanAttributesEqual(attributes, [
+        XCTAssertSpanAttributesEqual(self.attributes, [
             "db.cassandra.page_size": 42,
             "db.cassandra.consistency_level": "all",
             "db.cassandra.table": "languages",
