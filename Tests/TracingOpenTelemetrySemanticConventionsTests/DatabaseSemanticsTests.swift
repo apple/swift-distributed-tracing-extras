@@ -17,78 +17,67 @@ import TracingOpenTelemetrySemanticConventions
 import XCTest
 
 final class DatabaseSemanticsTests: XCTestCase {
-    func test_databaseNamespace() {
-        var attributes = SpanAttributes()
+    private var attributes = SpanAttributes()
 
-        attributes.db.system = "postgresql"
-        XCTAssertEqual(attributes["db.system"]?.toSpanAttribute(), "postgresql")
-
-        attributes.db.connectionString = "test"
-        XCTAssertEqual(attributes["db.connection_string"]?.toSpanAttribute(), "test")
-
-        attributes.db.user = "swift"
-        XCTAssertEqual(attributes["db.user"]?.toSpanAttribute(), "swift")
-
-        attributes.db.name = "languages"
-        XCTAssertEqual(attributes["db.name"]?.toSpanAttribute(), "languages")
-
-        attributes.db.statement = "SELECT version();"
-        XCTAssertEqual(attributes["db.statement"]?.toSpanAttribute(), "SELECT version();")
-
-        attributes.db.operation = "findAndModify"
-        XCTAssertEqual(attributes["db.operation"]?.toSpanAttribute(), "findAndModify")
+    override func setUp() {
+        self.attributes = [:]
     }
 
-    func test_MSSQLNamespace() {
-        var attributes = SpanAttributes()
+    func test_database() {
+        self.attributes.db.system = "postgresql"
+        self.attributes.db.connectionString = "test"
+        self.attributes.db.user = "swift"
+        self.attributes.db.name = "languages"
+        self.attributes.db.statement = "SELECT version();"
+        self.attributes.db.operation = "findAndModify"
 
-        attributes.db.mssql.instanceName = "test"
-        XCTAssertEqual(attributes["db.mssql.instance_name"]?.toSpanAttribute(), "test")
+        XCTAssertSpanAttributesEqual(self.attributes, [
+            "db.system": "postgresql",
+            "db.connection_string": "test",
+            "db.user": "swift",
+            "db.name": "languages",
+            "db.statement": "SELECT version();",
+            "db.operation": "findAndModify",
+        ])
     }
 
-    func test_redisNamespace() {
-        var attributes = SpanAttributes()
-
-        attributes.db.redis.databaseIndex = 42
-        XCTAssertEqual(attributes["db.redis.database_index"]?.toSpanAttribute(), 42)
+    func test_MSSQL() {
+        self.attributes.db.mssql.instanceName = "test"
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.mssql.instance_name": "test"])
     }
 
-    func test_mongoDBNamespace() {
-        var attributes = SpanAttributes()
-
-        attributes.db.mongoDB.collection = "languages"
-        XCTAssertEqual(attributes["db.mongodb.collection"]?.toSpanAttribute(), "languages")
+    func test_redis() {
+        self.attributes.db.redis.databaseIndex = 42
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.redis.database_index": 42])
     }
 
-    func test_sqlNamespace() {
-        var attributes = SpanAttributes()
-
-        attributes.db.sql.table = "languages"
-        XCTAssertEqual(attributes["db.sql.table"]?.toSpanAttribute(), "languages")
+    func test_mongoDB() {
+        self.attributes.db.mongoDB.collection = "languages"
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.mongodb.collection": "languages"])
     }
 
-    func test_cassandraNamespace() {
-        var attributes = SpanAttributes()
+    func test_SQL() {
+        self.attributes.db.sql.table = "languages"
+        XCTAssertSpanAttributesEqual(self.attributes, ["db.sql.table": "languages"])
+    }
 
-        attributes.db.cassandra.pageSize = 42
-        XCTAssertEqual(attributes["db.cassandra.page_size"]?.toSpanAttribute(), 42)
+    func test_cassandra() {
+        self.attributes.db.cassandra.pageSize = 42
+        self.attributes.db.cassandra.consistencyLevel = "all"
+        self.attributes.db.cassandra.table = "languages"
+        self.attributes.db.cassandra.idempotence = true
+        self.attributes.db.cassandra.speculativeExecutionCount = 42
+        self.attributes.db.cassandra.coordinatorID = "test"
+        self.attributes.db.cassandra.coordinatorDataCenter = "test"
 
-        attributes.db.cassandra.consistencyLevel = "all"
-        XCTAssertEqual(attributes["db.cassandra.consistency_level"]?.toSpanAttribute(), "all")
-
-        attributes.db.cassandra.table = "languages"
-        XCTAssertEqual(attributes["db.cassandra.table"]?.toSpanAttribute(), "languages")
-
-        attributes.db.cassandra.idempotence = true
-        XCTAssertEqual(attributes["db.cassandra.idempotence"]?.toSpanAttribute(), true)
-
-        attributes.db.cassandra.speculativeExecutionCount = 42
-        XCTAssertEqual(attributes["db.cassandra.speculative_execution_count"]?.toSpanAttribute(), 42)
-
-        attributes.db.cassandra.coordinatorID = "test"
-        XCTAssertEqual(attributes["db.cassandra.coordinator.id"]?.toSpanAttribute(), "test")
-
-        attributes.db.cassandra.coordinatorDataCenter = "test"
-        XCTAssertEqual(attributes["db.cassandra.coordinator.dc"]?.toSpanAttribute(), "test")
+        XCTAssertSpanAttributesEqual(self.attributes, [
+            "db.cassandra.page_size": 42,
+            "db.cassandra.consistency_level": "all",
+            "db.cassandra.table": "languages",
+            "db.cassandra.idempotence": true,
+            "db.cassandra.speculative_execution_count": 42,
+            "db.cassandra.coordinator.id": "test",
+            "db.cassandra.coordinator.dc": "test",
+        ])
     }
 }

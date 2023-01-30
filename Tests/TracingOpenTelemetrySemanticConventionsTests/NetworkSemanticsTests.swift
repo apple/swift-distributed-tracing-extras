@@ -17,64 +17,71 @@ import TracingOpenTelemetrySemanticConventions
 import XCTest
 
 final class NetworkSemanticsTests: XCTestCase {
-    func test_networkNamespace() {
-        var attributes = SpanAttributes()
+    private var attributes = SpanAttributes()
 
-        attributes.network.transport = .ipTCP
-        XCTAssertEqual(attributes["net.transport"]?.toSpanAttribute(), "ip_tcp")
+    override func setUp() {
+        self.attributes = [:]
+    }
 
-        attributes.network.transport = .ipUDP
-        XCTAssertEqual(attributes["net.transport"]?.toSpanAttribute(), "ip_udp")
+    func test_networkTransport() {
+        self.attributes.network.transport = .ipTCP
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "ip_tcp"])
 
-        attributes.network.transport = .ip
-        XCTAssertEqual(attributes["net.transport"]?.toSpanAttribute(), "ip")
+        self.attributes.network.transport = .ipUDP
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "ip_udp"])
 
-        attributes.network.transport = .unix
-        XCTAssertEqual(attributes["net.transport"]?.toSpanAttribute(), "unix")
+        self.attributes.network.transport = .ip
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "ip"])
 
-        attributes.network.transport = .pipe
-        XCTAssertEqual(attributes["net.transport"]?.toSpanAttribute(), "pipe")
+        self.attributes.network.transport = .unix
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "unix"])
 
-        attributes.network.transport = .inProcess
-        XCTAssertEqual(attributes["net.transport"]?.toSpanAttribute(), "inproc")
+        self.attributes.network.transport = .pipe
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "pipe"])
 
-        attributes.network.transport = .other
-        XCTAssertEqual(attributes["net.transport"]?.toSpanAttribute(), "other")
+        self.attributes.network.transport = .inProcess
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "inproc"])
 
-        attributes.network.peer.ip = "127.0.0.1"
-        XCTAssertEqual(attributes["net.peer.ip"]?.toSpanAttribute(), "127.0.0.1")
+        self.attributes.network.transport = .other
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "other"])
 
-        attributes.network.peer.port = 80
-        XCTAssertEqual(attributes["net.peer.port"]?.toSpanAttribute(), 80)
+        self.attributes.network.transport = .init(rawValue: "custom")
+        XCTAssertSpanAttributesEqual(self.attributes, ["net.transport": "custom"])
+    }
 
-        attributes.network.peer.name = "swift.org"
-        XCTAssertEqual(attributes["net.peer.name"]?.toSpanAttribute(), "swift.org")
+    func test_networkPeer() {
+        self.attributes.network.peer.ip = "127.0.0.1"
+        self.attributes.network.peer.port = 35555
+        self.attributes.network.peer.name = "swift.org"
 
-        attributes.network.host.ip = "127.0.0.1"
-        XCTAssertEqual(attributes["net.host.ip"]?.toSpanAttribute(), "127.0.0.1")
+        XCTAssertSpanAttributesEqual(self.attributes, [
+            "net.peer.ip": "127.0.0.1",
+            "net.peer.port": 35555,
+            "net.peer.name": "swift.org",
+        ])
+    }
 
-        attributes.network.host.port = 35555
-        XCTAssertEqual(attributes["net.host.port"]?.toSpanAttribute(), 35555)
+    func test_networkHost() {
+        self.attributes.network.host.ip = "127.0.0.1"
+        self.attributes.network.host.port = 80
+        self.attributes.network.host.name = "localhost"
+        self.attributes.network.host.connection.type = "wifi"
+        self.attributes.network.host.connection.subtype = "LTE"
+        self.attributes.network.host.carrier.name = "42"
+        self.attributes.network.host.carrier.mcc = "42"
+        self.attributes.network.host.carrier.mnc = "42"
+        self.attributes.network.host.carrier.icc = "DE"
 
-        attributes.network.host.name = "localhost"
-        XCTAssertEqual(attributes["net.host.name"]?.toSpanAttribute(), "localhost")
-
-        attributes.network.host.connection.type = "wifi"
-        XCTAssertEqual(attributes["net.host.connection.type"]?.toSpanAttribute(), "wifi")
-
-        attributes.network.host.connection.subtype = "LTE"
-        XCTAssertEqual(attributes["net.host.connection.subtype"]?.toSpanAttribute(), "LTE")
-
-        attributes.network.host.carrier.name = "42"
-        XCTAssertEqual(attributes["net.host.carrier.name"]?.toSpanAttribute(), "42")
-
-        attributes.network.host.carrier.mcc = "42"
-        XCTAssertEqual(attributes["net.host.carrier.mcc"]?.toSpanAttribute(), "42")
-
-        attributes.network.host.carrier.mnc = "42"
-        XCTAssertEqual(attributes["net.host.carrier.mnc"]?.toSpanAttribute(), "42")
-
-        attributes.network.host.carrier.icc = "DE"
-        XCTAssertEqual(attributes["net.host.carrier.icc"]?.toSpanAttribute(), "DE")
+        XCTAssertSpanAttributesEqual(self.attributes, [
+            "net.host.ip": "127.0.0.1",
+            "net.host.port": 80,
+            "net.host.name": "localhost",
+            "net.host.connection.type": "wifi",
+            "net.host.connection.subtype": "LTE",
+            "net.host.carrier.name": "42",
+            "net.host.carrier.mcc": "42",
+            "net.host.carrier.mnc": "42",
+            "net.host.carrier.icc": "DE",
+        ])
     }
 }
