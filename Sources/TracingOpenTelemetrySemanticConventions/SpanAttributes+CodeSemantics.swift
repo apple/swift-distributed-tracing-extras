@@ -64,6 +64,6 @@ public struct CodeAttributes: SpanAttributeNamespace {
         /// E.g. 42.
         ///
         /// You may want to set this attribute to `#line`.
-        public var lineNumber: Key<Int> { "code.lineno" }
+        public var lineNumber: Key<Int64> { "code.lineno" }
     }
 }

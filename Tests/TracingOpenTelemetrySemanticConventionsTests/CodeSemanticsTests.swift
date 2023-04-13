@@ -20,7 +20,7 @@ final class CodeSemanticsTests: XCTestCase {
     func test_code() {
         var attributes = SpanAttributes()
 
-        let line = #line
+        let line: Int64 = #line
 
         attributes.code.function = #function
         attributes.code.namespace = "Tracing"
@@ -31,7 +31,7 @@ final class CodeSemanticsTests: XCTestCase {
             "code.function": #function,
             "code.namespace": "Tracing",
             "code.filepath": #filePath,
-            "code.lineno": .int(line),
+            "code.lineno": .int64(Int64(line)),
         ])
     }
 }
