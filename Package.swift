@@ -4,10 +4,10 @@ import PackageDescription
 let package = Package(
     name: "swift-distributed-tracing-extras",
     platforms: [
-        .macOS(.v10_13),
-        .iOS(.v14),
-        .tvOS(.v14),
-        .watchOS(.v7),
+        .macOS(.v10_15),
+        .iOS(.v13),
+        .tvOS(.v13),
+        .watchOS(.v6),
     ],
     products: [
         .library(
@@ -18,7 +18,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-distributed-tracing.git", from: "0.3.0"),
+        .package(url: "https://github.com/apple/swift-distributed-tracing.git", from: "1.0.0-beta.1"),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [

@@ -151,10 +151,14 @@ public struct RPCAttributes: SpanAttributeNamespace {
         }
 
         public struct StatusCode: RawRepresentable, SpanAttributeConvertible {
-            public let rawValue: Int
+            public let rawValue: Int64
 
-            public init(rawValue: Int) {
+            public init(rawValue: Int64) {
                 self.rawValue = rawValue
+            }
+
+            public init(_ rawValue: Int) {
+                self.rawValue = Int64(exactly: rawValue)!
             }
 
             /// OK
@@ -209,7 +213,7 @@ public struct RPCAttributes: SpanAttributeNamespace {
             public static let unauthenticated = StatusCode(rawValue: 16)
 
             public func toSpanAttribute() -> SpanAttribute {
-                .int(self.rawValue)
+                SpanAttribute.int64(self.rawValue)
             }
         }
     }
