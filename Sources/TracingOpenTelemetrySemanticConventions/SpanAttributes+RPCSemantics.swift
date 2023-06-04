@@ -150,7 +150,7 @@ public struct RPCAttributes: SpanAttributeNamespace {
             public var statusCode: Key<StatusCode> { "rpc.grpc.status_code" }
         }
 
-        public struct StatusCode: RawRepresentable, SpanAttributeConvertible {
+        public struct StatusCode: RawRepresentable, SpanAttributeConvertible, Sendable {
             public let rawValue: Int64
 
             public init(rawValue: Int64) {
@@ -271,7 +271,7 @@ public struct RPCAttributes: SpanAttributeNamespace {
 
 extension RPCAttributes {
     /// Well-known RPC systems, used for the ``RPCAttributes/NestedSpanAttributes/system`` span attribute.
-    public struct System: RawRepresentable, SpanAttributeConvertible {
+    public struct System: RawRepresentable, SpanAttributeConvertible, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {

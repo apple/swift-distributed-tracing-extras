@@ -231,7 +231,7 @@ public struct MessagingAttributes: SpanAttributeNamespace {
         }
 
         /// Possible values for the ``MessagingAttributes/RocketMQAttributes/NestedSpanAttributes/messageType`` span attribute.
-        public struct MessageType: RawRepresentable, SpanAttributeConvertible {
+        public struct MessageType: RawRepresentable, SpanAttributeConvertible, Sendable {
             public let rawValue: String
 
             public init(rawValue: String) {
@@ -256,7 +256,7 @@ public struct MessagingAttributes: SpanAttributeNamespace {
         }
 
         /// Possible values for the ``MessagingAttributes/RocketMQAttributes/NestedSpanAttributes/consumptionModel`` span attribute.
-        public struct ConsumptionModel: RawRepresentable, SpanAttributeConvertible {
+        public struct ConsumptionModel: RawRepresentable, SpanAttributeConvertible, Sendable {
             public let rawValue: String
 
             public init(rawValue: String) {
@@ -280,7 +280,7 @@ public struct MessagingAttributes: SpanAttributeNamespace {
 
 extension MessagingAttributes {
     /// Possible values for the ``MessagingAttributes/NestedSpanAttributes/destinationKind`` span attribute.
-    public struct DestinationKind: RawRepresentable, SpanAttributeConvertible {
+    public struct DestinationKind: RawRepresentable, SpanAttributeConvertible, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {
@@ -309,7 +309,7 @@ extension MessagingAttributes {
     /// as it can be inferred from the span kind.
     ///
     /// OpenTelemetry Spec: [Messaging Operation Names](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.11.0/specification/trace/semantic_conventions/messaging.md#operation-names)
-    public struct Operation: RawRepresentable, SpanAttributeConvertible {
+    public struct Operation: RawRepresentable, SpanAttributeConvertible, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {

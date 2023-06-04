@@ -49,7 +49,7 @@ public struct NetworkAttributes: SpanAttributeNamespace {
     /// Possible values for the `network.transport` span attribute.
     ///
     /// OpenTelemetry Spec: [Network transport attributes](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.11.0/specification/trace/semantic_conventions/span-general.md#network-transport-attributes)
-    public struct Transport: RawRepresentable, SpanAttributeConvertible {
+    public struct Transport: RawRepresentable, SpanAttributeConvertible, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {

@@ -120,7 +120,7 @@ public struct FaaSAttributes: SpanAttributeNamespace {
 
         /// Well-known data operations,
         /// used for the ``FaaSAttributes/DocumentAttributes/NestedSpanAttributes/operation`` span attribute.
-        public struct Operation: RawRepresentable, SpanAttributeConvertible {
+        public struct Operation: RawRepresentable, SpanAttributeConvertible, Sendable {
             public let rawValue: String
 
             public init(rawValue: String) {
@@ -184,7 +184,7 @@ public struct FaaSAttributes: SpanAttributeNamespace {
 
 extension FaaSAttributes {
     /// Triggers which caused a function execution, used for the ``FaaSAttributes/NestedSpanAttributes/trigger`` span attribute.
-    public struct Trigger: RawRepresentable, SpanAttributeConvertible {
+    public struct Trigger: RawRepresentable, SpanAttributeConvertible, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {
@@ -218,7 +218,7 @@ extension FaaSAttributes {
 
 extension FaaSAttributes {
     /// Well-known cloud providers, used for the ``FaaSAttributes/NestedSpanAttributes/invokedProvider`` span attribute.
-    public struct Provider: RawRepresentable, SpanAttributeConvertible {
+    public struct Provider: RawRepresentable, SpanAttributeConvertible, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {
