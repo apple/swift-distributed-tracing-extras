@@ -25,7 +25,7 @@ Then, you can depend on the extras package:
 #### Usage
 
 The OpenTelemetry Semantic Conventions package provides span attributes to work with [OpenTelemetry's
-semantic conventions](https://github.com/open-telemetry/opentelemetry-specification/tree/main/specification/trace/semantic_conventions).
+semantic conventions](https://github.com/open-telemetry/opentelemetry-specification/tree/v1.11.0/specification/trace/semantic_conventions).
 
 Semantic attributes enable users of [swift-distributed-tracing](https://github.com/apple/swift-distributed-tracing) to
 set attributes on spans using a type-safe pre-defined and well known attributes, like this:
