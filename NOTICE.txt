@@ -32,3 +32,12 @@ This product contains references to and uses vocabulary defined by the Open Tele
     * https://github.com/open-telemetry/opentelemetry-specification/blob/main/LICENSE
   * HOMEPAGE:
     * https://opentelemetry.io
+
+---
+
+This product contains a script for generating CONTRIBUTORS.txt from Apple/Swift-NIO.
+
+  * LICENSE (Apache 2.0):
+    * https://github.com/apple/swift-nio/blob/main/LICENSE.txt
+  * HOMEPAGE:
+    * https://github.com/apple/swift-nio
