@@ -17,7 +17,7 @@ import TracingOpenTelemetrySemanticConventions
 import XCTest
 
 final class URLSemanticsTests: XCTestCase {
-    func test_peer() {
+    func test_url() {
         var attributes = SpanAttributes()
 
         attributes.url.domain = "www.foo.bar"
