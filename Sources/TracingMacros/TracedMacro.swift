@@ -11,7 +11,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 //===----------------------------------------------------------------------===//
-import ServiceContextModule
+@_exported import ServiceContextModule
 import Tracing
 
 /// A span name for a traced operation, either derived from the function name or explicitly specified.
