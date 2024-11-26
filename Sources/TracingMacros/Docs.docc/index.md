@@ -15,4 +15,3 @@ to a function and get started.
 
 ### Tracing functions
 - ``Traced(_:context:ofKind:span:)``
-- ``TracedOperationName``
