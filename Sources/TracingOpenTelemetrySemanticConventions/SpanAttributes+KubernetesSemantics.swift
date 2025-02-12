@@ -649,7 +649,7 @@ extension KubernetesAttributes {
         ///     then "k8s.<resource>.annotation.<key>": "k8s.pod.annotation.com.apple.swift/foo.bar"
         /// - Parameters:
         ///   - value: The value for the given metadata label/annotation.
-        ///   - metadata: The key name of the Kubernetes resource's label/annotation.
+        ///   - key: The key name of the Kubernetes resource's label/annotation.
         public mutating func setValue(_ value: String, forKey key: String) {
             self.attributes["k8s.\(self.resource).\(self.group).\(key)"] = value
         }
