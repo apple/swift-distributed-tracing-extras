@@ -1,5 +1,9 @@
 # Swift Distributed Tracing Extras
 
+> [!Important]
+> Swift Distributed Tracing Extras is now **deprecated and read-only**. OpenTelemetry semantic conventions moved to
+> [swift-otel/swift-otel-semantic-conventions](https://github.com/swift-otel/swift-otel-semantic-conventions).
+
 ## Modules
 
 Swift Distributed Tracing Extras ships the following extra modules:
